@@ -1,0 +1,269 @@
+Script started on Wed 18 Apr 2018 11:39:23 PM EDT
+[?1034hbash-4.1$ date
+Wed Apr 18 23:39:26 EDT 2018
+bash-4.1$ -a
+bash: -a: command not found
+bash-4.1$ uname -a
+Linux Zeus-1 2.6.32-696.18.7.el6.centos.plus.x86_64 #1 SMP Tue Jan 9 14:11:50 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+bash-4.1$ ls
+lab10  lab10_dalemu2_207  lab10_dalemu2_207.c  lab10Typescript_dalemu2_207  Makefile
+bash-4.1$ cat lab10_dalemu2_207.c
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+//struct defined datatype
+typedef struct item
+{
+   char itemName[25];		// item name
+   size_t quantity;		//
+   double price;
+}item;
+
+// prototypes 
+void printItem(item *shoppingCart,int size);   // prototype for printing saved items
+item getItem();			// read items from consule
+void *ResizeArray(void  *shoppingCart, int count);	// double the size of the array 
+
+int main()
+{
+    int option;			// menu option
+    int count=0;		// count number of items when it add on the shopping cart
+    int size;			// intitial size 
+    char buffer[100];		// 
+    
+     printf("Enter number of items -> ");	// 
+     fgets(buffer,100,stdin);			// read initial item size
+     sscanf(buffer,"%d",&size);		
+     
+     item *shoppingCart;			// initialize shoppingCart
+     
+     shoppingCart =(item*)malloc(size * sizeof(item));   // allocate memory from the heap 
+     if (shoppingCart == NULL)		// check to see that the memory was allocated
+      {
+        printf("Error allocating memory for shopping cart!\n");
+	exit(0);
+      }
+		
+  while(1)	
+   {
+	// menu 
+    printf("1. Add an item to ShoppingCart \n");
+    printf("2. Print the current list of items \n");
+    printf("3. Quit the program \n");
+
+    printf("Enter your choise  -> ");
+    scanf("%d",&option);
+      
+   switch(option)
+   {
+  
+	case 1:					// 
+	   if(count==size)			// check if number of item and current size is equal
+	    {
+		shoppingCart=ResizeArray(shoppingCart,count);	// if true call ResizeArray function
+		size=size*2;		// double current size
+	    }
+
+	    shoppingCart[count]=getItem();		// call getItem function to add items
+            count++;			// count number of items which is added
+            break;
+
+       case 2:
+           printItem(shoppingCart,count);		// call printItem function 
+	   break;
+  
+       case 3:
+	   printf(" Exit from program \n");
+	   exit(0);			// exit program
+
+        default:
+	   printf("invalid input try again");
+   }
+ // free(shoppingCart);
+ }
+}
+// get Item function adds item in shoping cart
+item getItem()
+{
+     item cItem;	// variable declaration type item
+ 
+     getchar();		// reaid of newline 
+
+     printf("Enter item Name  -> ");		// item name
+     fgets(cItem.itemName,25,stdin);		// rread item name
+  
+
+     printf("Enter quantity  ->");		// quantity 
+     scanf("%zu",&cItem.quantity);		// read quantity 
+
+     printf("Enter item price->");		// read price
+     scanf("%lf",&cItem.price);			
+
+     return cItem;		// return item values
+}
+// printItem function prints items in the shopping cart
+void printItem(item* shoppingCart,int size)
+{
+     for(int i=0;i< size;i++)			// use loop get access and all items in the array
+     {
+         printf("item Name -> %s",shoppingCart[i].itemName);
+	 printf("item quantity -> %zu\n",shoppingCart[i].quantity);
+         printf("item price -> %lf \n\n",shoppingCart[i].price);
+     }
+}
+// ResizeArray function double the size of the existing ShoppingCart whenever it calls
+void *ResizeArray(void *shoppingCart,int size)
+
+{
+ 
+    item *newShoppingCart=(item*) malloc((size + size)*sizeof(item));  // declare new dinamic array 
+     if (newShoppingCart == NULL)	//check if number of item and current size is equal
+    {
+        printf("Error allocating memory for new shopping Cart!\n");
+	exit(0);
+    }
+    memcpy(newShoppingCart,shoppingCart,size*sizeof(item));   // copy the existing shopingcart items in to new array 
+    free(shoppingCart);			// free the shoppingCart
+    return newShoppingCart;		// return newshopingCart array
+
+}
+bash-4.1$ make
+gcc -g -Wall -o0 lab10_dalemu2_207 lab10_dalemu2_207.c
+lab10_dalemu2_207: In function `_fini':
+(.fini+0x0): multiple definition of `_fini'
+/usr/lib/../lib64/crti.o:(.fini+0x0): first defined here
+lab10_dalemu2_207: In function `data_start':
+(.data+0x0): multiple definition of `__data_start'
+/usr/lib/../lib64/crt1.o:(.data+0x0): first defined here
+lab10_dalemu2_207:(.rodata+0x8): multiple definition of `__dso_handle'
+/opt/rh/devtoolset-6/root/usr/lib/gcc/x86_64-redhat-linux/6.3.1/crtbegin.o:(.rodata+0x0): first defined here
+lab10_dalemu2_207:(.rodata+0x0): multiple definition of `_IO_stdin_used'
+/usr/lib/../lib64/crt1.o:(.rodata.cst4+0x0): first defined here
+lab10_dalemu2_207: In function `_start':
+(.text+0x0): multiple definition of `_start'
+/usr/lib/../lib64/crt1.o:(.text+0x0): first defined here
+lab10_dalemu2_207: In function `_init':
+(.init+0x0): multiple definition of `_init'
+/usr/lib/../lib64/crti.o:(.init+0x0): first defined here
+/tmp/cc1dEhz9.o: In function `main':
+/home/dalemu2/cs262/lab10_dalemu2_207/lab10_dalemu2_207.c:19: multiple definition of `main'
+lab10_dalemu2_207:/home/dalemu2/cs262/lab10_dalemu2_207/lab10_dalemu2_207.c:19: first defined here
+/tmp/cc1dEhz9.o: In function `ResizeArray':
+/home/dalemu2/cs262/lab10_dalemu2_207/lab10_dalemu2_207.c:108: multiple definition of `ResizeArray'
+lab10_dalemu2_207:/home/dalemu2/cs262/lab10_dalemu2_207/lab10_dalemu2_207.c:107: first defined here
+/tmp/cc1dEhz9.o: In function `getItem':
+/home/dalemu2/cs262/lab10_dalemu2_207/lab10_dalemu2_207.c:78: multiple definition of `getItem'
+lab10_dalemu2_207:/home/dalemu2/cs262/lab10_dalemu2_207/lab10_dalemu2_207.c:77: first defined here
+/tmp/cc1dEhz9.o: In function `printItem':
+/home/dalemu2/cs262/lab10_dalemu2_207/lab10_dalemu2_207.c:97: multiple definition of `printItem'
+lab10_dalemu2_207:/home/dalemu2/cs262/lab10_dalemu2_207/lab10_dalemu2_207.c:96: first defined here
+/opt/rh/devtoolset-6/root/usr/lib/gcc/x86_64-redhat-linux/6.3.1/crtend.o:(.tm_clone_table+0x0): multiple definition of `__TMC_END__'
+lab10_dalemu2_207:(.data+0x8): first defined here
+/opt/rh/devtoolset-6/root/usr/libexec/gcc/x86_64-redhat-linux/6.3.1/ld: warning: Cannot create .eh_frame_hdr section, --eh-frame-hdr ignored.
+/opt/rh/devtoolset-6/root/usr/libexec/gcc/x86_64-redhat-linux/6.3.1/ld: error in lab10_dalemu2_207(.eh_frame); no .eh_frame_hdr table will be created.
+collect2: error: ld returned 1 exit status
+Makefile:10: recipe for target 'lab10_dalemu2_207' failed
+make: *** [lab10_dalemu2_207] Error 1
+bash-4.1$ valgrind --leak-check=yes lab10_dalemu2_207 arg1 arg2
+==27291== Memcheck, a memory error detector
+==27291== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==27291== Using Valgrind-3.12.0 and LibVEX; rerun with -h for copyright info
+==27291== Command: lab10_dalemu2_207 arg1 arg2
+==27291== 
+Enter number of items -> 2
+1. Add an item to ShoppingCart 
+2. Print the current list of items 
+3. Quit the program 
+Enter your choise  -> 1
+Enter item Name  -> item1
+Enter quantity  ->2
+Enter item price->1.2
+1. Add an item to ShoppingCart 
+2. Print the current list of items 
+3. Quit the program 
+Enter your choise  -> 1
+Enter item Name  -> item2
+Enter quantity  ->3
+Enter item price->4.4
+1. Add an item to ShoppingCart 
+2. Print the current list of items 
+3. Quit the program 
+Enter your choise  -> 1
+Enter item Name  -> item3
+Enter quantity  ->78
+Enter item price->89.08
+1. Add an item to ShoppingCart 
+2. Print the current list of items 
+3. Quit the program 
+Enter your choise  -> 1
+Enter item Name  -> item4
+Enter quantity  ->676
+Enter item price->8.099
+1. Add an item to ShoppingCart 
+2. Print the current list of items 
+3. Quit the program 
+Enter your choise  -> 1
+Enter item Name  -> item5
+Enter quantity  ->78
+Enter item price->986.08
+1. Add an item to ShoppingCart 
+2. Print the current list of items 
+3. Quit the program 
+Enter your choise  -> 1
+Enter item Name  -> item6
+Enter quantity  ->2
+Enter item price->11.9
+1. Add an item to ShoppingCart 
+2. Print the current list of items 
+3. Quit the program 
+Enter your choise  -> 2
+item Name -> item1
+item quantity -> 2
+item price -> 1.200000 
+
+item Name -> item2
+item quantity -> 3
+item price -> 4.400000 
+
+item Name -> item3
+item quantity -> 78
+item price -> 89.080000 
+
+item Name -> item4
+item quantity -> 676
+item price -> 8.099000 
+
+item Name -> item5
+item quantity -> 78
+item price -> 986.080000 
+
+item Name -> item6
+item quantity -> 2
+item price -> 11.900000 
+
+1. Add an item to ShoppingCart 
+2. Print the current list of items 
+3. Quit the program 
+Enter your choise  -> 3
+ Exit from program 
+==27291== 
+==27291== HEAP SUMMARY:
+==27291==     in use at exit: 384 bytes in 1 blocks
+==27291==   total heap usage: 3 allocs, 2 frees, 672 bytes allocated
+==27291== 
+==27291== LEAK SUMMARY:
+==27291==    definitely lost: 0 bytes in 0 blocks
+==27291==    indirectly lost: 0 bytes in 0 blocks
+==27291==      possibly lost: 0 bytes in 0 blocks
+==27291==    still reachable: 384 bytes in 1 blocks
+==27291==         suppressed: 0 bytes in 0 blocks
+==27291== Reachable blocks (those to which a pointer was found) are not shown.
+==27291== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==27291== 
+==27291== For counts of detected and suppressed errors, rerun with: -v
+==27291== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 4 from 4)
+bash-4.1$ ^C
+bash-4.1$ exit
+
+Script done on Wed 18 Apr 2018 11:44:59 PM EDT
